@@ -10,10 +10,14 @@ export function ProductGallery({ product }: { product: Product }) {
   const [active, setActive] = useState<string | null>(null)
   const modelViewerRef = useRef<any>(null)
 
-  const handleCameraClick = () => {
-    // Trigger camera in model-viewer
-    if (modelViewerRef.current?.startCamera) {
-      modelViewerRef.current.startCamera()
+  const handleCameraClick = async () => {
+    try {
+      if (modelViewerRef.current?.startCamera) {
+        await modelViewerRef.current.startCamera()
+      }
+    } catch (error) {
+      console.error('Camera error:', error)
+      alert('Unable to access camera. Please check your browser permissions and try again.')
     }
   }
 
