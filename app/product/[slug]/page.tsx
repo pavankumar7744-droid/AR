@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, Check, Ruler, Smartphone } from 'lucide-react'
+import { ArrowLeft, Check, Ruler } from 'lucide-react'
 import { getProduct, products, formatPrice } from '@/lib/products'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
@@ -71,10 +71,6 @@ export default async function ProductPage({
 
               <div className="flex flex-wrap items-center gap-3 animate-fade-in-up">
                 <AddToBag product={product} className="px-8 py-3.5" />
-                <span className="inline-flex items-center gap-2 rounded-full border border-border/50 px-4 py-3 text-sm text-muted-foreground bg-card/30 backdrop-blur transition-smooth hover:border-accent/50">
-                  <Smartphone className="size-4 text-accent" aria-hidden="true" />
-                  Use "View in your room" above on mobile
-                </span>
               </div>
 
               <p className="leading-relaxed text-foreground/80 animate-fade-in-up">

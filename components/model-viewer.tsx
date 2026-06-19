@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { Box, Loader2, Move3d, Smartphone, Camera, X as CloseIcon } from 'lucide-react'
+import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
+import { Box, Loader2, Move3d, X as CloseIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 type ModelViewerProps = {
@@ -19,6 +19,11 @@ type ModelViewerProps = {
   autoRotate?: boolean
 }
 
+export type ModelViewerHandle = {
+  startCamera: () => Promise<void>
+  stopCamera: () => void
+}
+
 let loaderPromise: Promise<unknown> | null = null
 function ensureModelViewer() {
   if (typeof window === 'undefined') return null
@@ -28,18 +33,21 @@ function ensureModelViewer() {
   return loaderPromise
 }
 
-export function ModelViewer({
-  src,
-  alt,
-  poster,
-  cameraOrbit = '0deg 78deg 100%',
-  interactive = false,
-  className,
-  onVariants,
-  variant,
-  autoRotate = true,
-}: ModelViewerProps) {
-  const ref = useRef<HTMLElement & {
+export const ModelViewer = forwardRef<ModelViewerHandle, ModelViewerProps>(function ModelViewer(
+  {
+    src,
+    alt,
+    poster,
+    cameraOrbit = '0deg 78deg 100%',
+    interactive = false,
+    className,
+    onVariants,
+    variant,
+    autoRotate = true,
+  },
+  ref,
+) {
+  const modelViewerRef = useRef<HTMLElement & {
     availableVariants?: string[]
     variantName?: string | null
     activateAR?: () => void
@@ -47,7 +55,6 @@ export function ModelViewer({
     loaded?: boolean
   }>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
   const [defined, setDefined] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [arAvailable, setArAvailable] = useState(false)
@@ -73,7 +80,7 @@ export function ModelViewer({
   }, [])
 
   useEffect(() => {
-    const el = ref.current
+    const el = modelViewerRef.current
     if (!el) return
     let done = false
     const handleLoad = () => {
@@ -97,7 +104,7 @@ export function ModelViewer({
 
   // Apply a chosen material variant
   useEffect(() => {
-    const el = ref.current
+    const el = modelViewerRef.current
     if (!el || !loaded) return
     el.variantName = variant ?? null
   }, [variant, loaded])
@@ -120,7 +127,7 @@ export function ModelViewer({
         setCameraPermission('granted')
       }
     } catch (err) {
-      console.error('Camera access denied:', err)
+      console.error('[v0] Camera access denied:', err)
       setCameraPermission('denied')
     }
   }
@@ -132,6 +139,12 @@ export function ModelViewer({
       setCameraMode(false)
     }
   }
+
+  // Expose camera functions via ref
+  useImperativeHandle(ref, () => ({
+    startCamera,
+    stopCamera,
+  }), [])
 
   return (
     <div className={cn('group relative h-full w-full overflow-hidden bg-background', className)}>
@@ -157,7 +170,7 @@ export function ModelViewer({
 
       {!cameraMode && defined ? (
         <model-viewer
-          ref={ref as never}
+          ref={modelViewerRef as never}
           src={src}
           alt={alt}
           poster={poster}
@@ -185,23 +198,6 @@ export function ModelViewer({
             ['--poster-color' as string]: 'transparent',
           }}
         >
-          {interactive && (
-            <div slot="ar-button" className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-3">
-              <button
-                onClick={startCamera}
-                className="inline-flex items-center gap-2 rounded-full bg-card/90 px-5 py-3 text-sm font-medium text-foreground shadow-premium transition-smooth backdrop-blur hover:bg-card"
-              >
-                <Camera className="size-4" aria-hidden="true" />
-                Use laptop camera
-              </button>
-              <button
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-lg transition-smooth hover:bg-primary/90"
-              >
-                <Smartphone className="size-4" aria-hidden="true" />
-                View in your room
-              </button>
-            </div>
-          )}
           <div slot="progress-bar" />
         </model-viewer>
       ) : null}
@@ -232,4 +228,4 @@ export function ModelViewer({
       )}
     </div>
   )
-}
+})

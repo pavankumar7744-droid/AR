@@ -1,13 +1,21 @@
 'use client'
 
-import { useState } from 'react'
-import { Box } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Box, Camera } from 'lucide-react'
 import type { Product } from '@/lib/products'
 import { ModelViewer } from '@/components/model-viewer'
 
 export function ProductGallery({ product }: { product: Product }) {
   const [variants, setVariants] = useState<string[]>([])
   const [active, setActive] = useState<string | null>(null)
+  const modelViewerRef = useRef<any>(null)
+
+  const handleCameraClick = () => {
+    // Trigger camera in model-viewer
+    if (modelViewerRef.current?.startCamera) {
+      modelViewerRef.current.startCamera()
+    }
+  }
 
   return (
     <div className="animate-fade-in">
@@ -18,6 +26,7 @@ export function ProductGallery({ product }: { product: Product }) {
           Live 3D &middot; AR ready
         </span>
         <ModelViewer
+          ref={modelViewerRef}
           src={product.model}
           alt={`Interactive 3D model of the ${product.name}`}
           cameraOrbit={product.cameraOrbit}
@@ -25,6 +34,14 @@ export function ProductGallery({ product }: { product: Product }) {
           variant={active}
           onVariants={(v) => setVariants(v)}
         />
+        <button
+          onClick={handleCameraClick}
+          className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 inline-flex items-center gap-2 rounded-full bg-card/90 px-5 py-3 text-sm font-medium text-foreground shadow-premium transition-smooth backdrop-blur hover:bg-card active:scale-95"
+          aria-label="Use laptop camera to view furniture in your room"
+        >
+          <Camera className="size-4" aria-hidden="true" />
+          Use laptop camera
+        </button>
       </div>
 
       {variants.length > 1 && (
