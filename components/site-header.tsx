@@ -68,8 +68,8 @@ export function SiteHeader() {
       {menuOpen && (
         <nav className="border-t border-border/40 bg-background/95 backdrop-blur-md px-5 py-4 md:hidden animate-fade-in">
           <ul className="flex flex-col gap-1">
-            {links.map((link, i) => (
-              <li key={link.label} style={{ animationDelay: `${i * 0.05}s` }} className="animate-fade-in-up">
+            {links.map((link) => (
+              <li key={link.label}>
                 <Link
                   href={link.href}
                   onClick={() => setMenuOpen(false)}

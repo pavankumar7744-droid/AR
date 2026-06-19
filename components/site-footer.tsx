@@ -48,8 +48,8 @@ export function SiteFooter() {
                 {col.title}
               </h3>
               <ul className="mt-4 flex flex-col gap-3">
-                {col.links.map((link, idx) => (
-                  <li key={link.label} style={{ animationDelay: `${colIdx * 0.05 + idx * 0.02}s` }} className="animate-fade-in-up">
+                {col.links.map((link) => (
+                  <li key={link.label}>
                     <Link
                       href={link.href}
                       className="text-sm text-foreground/70 transition-smooth hover:text-accent"

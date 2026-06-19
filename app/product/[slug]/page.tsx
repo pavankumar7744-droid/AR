@@ -84,8 +84,8 @@ export default async function ProductPage({
               <div className="border-t border-border/50 pt-8 animate-fade-in-up">
                 <h2 className="font-heading text-lg text-foreground">Details</h2>
                 <ul className="mt-5 flex flex-col gap-3">
-                  {product.details.map((detail, idx) => (
-                    <li key={detail} className="flex items-start gap-3 text-sm text-foreground/80" style={{ animationDelay: `${idx * 0.05}s` }}>
+                  {product.details.map((detail) => (
+                    <li key={detail} className="flex items-start gap-3 text-sm text-foreground/80">
                       <Check className="mt-0.5 size-4 shrink-0 text-accent flex-shrink-0" aria-hidden="true" />
                       {detail}
                     </li>
@@ -125,8 +125,8 @@ export default async function ProductPage({
               You may also like
             </h2>
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-              {related.map((p, idx) => (
-                <div key={p.id} style={{ animationDelay: `${idx * 0.1}s` }} className="animate-fade-in-up">
+              {related.map((p) => (
+                <div key={p.id}>
                   <ProductCard product={p} />
                 </div>
               ))}

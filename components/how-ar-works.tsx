@@ -56,7 +56,7 @@ export function HowArWorks() {
           </div>
           <ol className="flex flex-col gap-6 mt-10">
             {steps.map((step, i) => (
-              <li key={step.title} className="flex gap-5 animate-fade-in-up group" style={{ animationDelay: `${i * 0.1}s` }}>
+              <li key={step.title} className="flex gap-5 animate-fade-in-up group">
                 <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-accent to-accent/70 text-card shadow-premium transition-smooth group-hover:shadow-premium-lg group-hover:scale-110">
                   <step.icon className="size-6" aria-hidden="true" />
                 </div>

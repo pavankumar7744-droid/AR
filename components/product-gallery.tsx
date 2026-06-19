@@ -36,13 +36,12 @@ export function ProductGallery({ product }: { product: Product }) {
             </span>
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
-            {variants.map((v, idx) => {
+            {variants.map((v) => {
               const isActive = (active ?? variants[0]) === v
               return (
                 <button
                   key={v}
                   onClick={() => setActive(v)}
-                  style={{ animationDelay: `${idx * 0.05}s` }}
                   className={`rounded-full border-2 px-4 py-2 text-sm font-medium transition-smooth ${
                     isActive
                       ? 'border-accent bg-accent/10 text-foreground shadow-premium'

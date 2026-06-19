@@ -48,8 +48,8 @@ export function Hero() {
               { value: 'True scale', label: 'Centimetre-accurate' },
               { value: 'No app', label: 'Works in your browser' },
               { value: '3D + AR', label: 'On every product' },
-            ].map((stat, i) => (
-              <div key={stat.label} style={{ animationDelay: `${i * 0.1}s` }} className="animate-fade-in-up">
+            ].map((stat) => (
+              <div key={stat.label}>
                 <dt className="font-heading text-xl text-foreground">{stat.value}</dt>
                 <dd className="mt-1 text-xs text-muted-foreground">{stat.label}</dd>
               </div>
