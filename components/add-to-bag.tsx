@@ -27,7 +27,7 @@ export function AddToBag({
         }}
         aria-label={`Add ${product.name} to bag`}
         className={cn(
-          'flex size-10 items-center justify-center rounded-full bg-card/90 text-foreground shadow-sm backdrop-blur transition-colors hover:bg-primary hover:text-primary-foreground',
+          'flex size-10 items-center justify-center rounded-full bg-card/80 text-foreground shadow-premium transition-smooth backdrop-blur hover:bg-primary hover:text-primary-foreground hover:shadow-premium-lg active:scale-95',
           className,
         )}
       >
@@ -40,10 +40,10 @@ export function AddToBag({
     <button
       onClick={() => add(product)}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors',
+        'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-smooth shadow-premium-sm',
         variant === 'solid'
-          ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-          : 'border border-foreground/20 text-foreground hover:border-foreground/40',
+          ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-premium active:scale-95'
+          : 'border border-foreground/20 text-foreground hover:border-accent hover:bg-accent/5 hover:shadow-premium-sm',
         className,
       )}
     >

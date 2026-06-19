@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Box, Loader2, Move3d, Smartphone } from 'lucide-react'
+import { Box, Loader2, Move3d, Smartphone, Camera, X as CloseIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 type ModelViewerProps = {
@@ -46,9 +46,13 @@ export function ModelViewer({
     canActivateAR?: boolean
     loaded?: boolean
   }>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const [defined, setDefined] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [arAvailable, setArAvailable] = useState(false)
+  const [cameraMode, setCameraMode] = useState(false)
+  const [cameraPermission, setCameraPermission] = useState<'granted' | 'denied' | 'prompt' | null>(null)
 
   // Keep the latest onVariants without making it an effect dependency,
   // otherwise an inline callback from the parent re-runs the effect on every
@@ -98,9 +102,60 @@ export function ModelViewer({
     el.variantName = variant ?? null
   }, [variant, loaded])
 
+  // Handle camera access
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { 
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        },
+        audio: false,
+      })
+      
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+        setCameraMode(true)
+        setCameraPermission('granted')
+      }
+    } catch (err) {
+      console.error('Camera access denied:', err)
+      setCameraPermission('denied')
+    }
+  }
+
+  const stopCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream
+      stream.getTracks().forEach(track => track.stop())
+      setCameraMode(false)
+    }
+  }
+
   return (
-    <div className={cn('group relative h-full w-full overflow-hidden', className)}>
-      {defined ? (
+    <div className={cn('group relative h-full w-full overflow-hidden bg-background', className)}>
+      {cameraMode && (
+        <div className="absolute inset-0 z-50 flex flex-col bg-black">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-3">
+            <button
+              onClick={stopCamera}
+              className="inline-flex items-center gap-2 rounded-full bg-red-500 px-5 py-3 text-sm font-medium text-white shadow-lg transition-smooth hover:bg-red-600 active:scale-95"
+            >
+              <CloseIcon className="size-4" aria-hidden="true" />
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {!cameraMode && defined ? (
         <model-viewer
           ref={ref as never}
           src={src}
@@ -131,20 +186,28 @@ export function ModelViewer({
           }}
         >
           {interactive && (
-            <button
-              slot="ar-button"
-              className="absolute bottom-4 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-lg transition-colors hover:bg-primary/90"
-            >
-              <Smartphone className="size-4" aria-hidden="true" />
-              View in your room
-            </button>
+            <div slot="ar-button" className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-3">
+              <button
+                onClick={startCamera}
+                className="inline-flex items-center gap-2 rounded-full bg-card/90 px-5 py-3 text-sm font-medium text-foreground shadow-premium transition-smooth backdrop-blur hover:bg-card"
+              >
+                <Camera className="size-4" aria-hidden="true" />
+                Use laptop camera
+              </button>
+              <button
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-lg transition-smooth hover:bg-primary/90"
+              >
+                <Smartphone className="size-4" aria-hidden="true" />
+                View in your room
+              </button>
+            </div>
           )}
           <div slot="progress-bar" />
         </model-viewer>
       ) : null}
 
       {/* Loading / not-yet-defined state */}
-      {!loaded && (
+      {!loaded && !cameraMode && (
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 text-muted-foreground">
           {defined ? (
             <Loader2 className="size-6 animate-spin" aria-hidden="true" />
@@ -156,7 +219,7 @@ export function ModelViewer({
       )}
 
       {/* Desktop hint */}
-      {interactive && loaded && (
+      {interactive && loaded && !cameraMode && (
         <div className="pointer-events-none absolute left-4 top-4 hidden items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur md:inline-flex">
           <Move3d className="size-3.5" aria-hidden="true" />
           Drag to rotate

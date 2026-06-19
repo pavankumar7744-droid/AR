@@ -10,9 +10,10 @@ export function ProductGallery({ product }: { product: Product }) {
   const [active, setActive] = useState<string | null>(null)
 
   return (
-    <div>
-      <div className="relative aspect-square overflow-hidden rounded-2xl bg-gradient-to-b from-secondary to-muted">
-        <span className="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-card/85 px-3 py-1.5 text-xs font-medium backdrop-blur">
+    <div className="animate-fade-in">
+      <div className="relative aspect-square overflow-hidden rounded-3xl bg-gradient-to-br from-secondary via-background to-muted shadow-premium-xl">
+        <div className="absolute inset-0 bg-gradient-to-tr from-accent/5 via-transparent to-transparent pointer-events-none" />
+        <span className="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 text-xs font-medium backdrop-blur shadow-premium-sm">
           <Box className="size-3.5" aria-hidden="true" />
           Live 3D &middot; AR ready
         </span>
@@ -27,24 +28,25 @@ export function ProductGallery({ product }: { product: Product }) {
       </div>
 
       {variants.length > 1 && (
-        <div className="mt-5">
-          <p className="text-sm font-medium">
+        <div className="mt-7 animate-fade-in-up">
+          <p className="text-sm font-medium text-foreground">
             Finish
             <span className="ml-2 font-normal text-muted-foreground">
               {active ?? variants[0]}
             </span>
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {variants.map((v) => {
+          <div className="mt-4 flex flex-wrap gap-3">
+            {variants.map((v, idx) => {
               const isActive = (active ?? variants[0]) === v
               return (
                 <button
                   key={v}
                   onClick={() => setActive(v)}
-                  className={`rounded-full border px-3.5 py-1.5 text-sm transition-colors ${
+                  style={{ animationDelay: `${idx * 0.05}s` }}
+                  className={`rounded-full border-2 px-4 py-2 text-sm font-medium transition-smooth ${
                     isActive
-                      ? 'border-primary bg-primary text-primary-foreground'
-                      : 'border-border text-muted-foreground hover:border-foreground/30 hover:text-foreground'
+                      ? 'border-accent bg-accent/10 text-foreground shadow-premium'
+                      : 'border-border/50 text-muted-foreground hover:border-accent/50 hover:text-foreground hover:bg-accent/5'
                   }`}
                 >
                   {v}

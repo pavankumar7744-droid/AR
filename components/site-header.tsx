@@ -17,13 +17,13 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-border/40 bg-background/70 backdrop-blur-xl transition-smooth shadow-premium-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
         <div className="flex items-center gap-2 md:hidden">
           <button
             onClick={() => setMenuOpen((v) => !v)}
             aria-label="Toggle menu"
-            className="rounded-full p-1.5 text-foreground"
+            className="rounded-full p-1.5 text-foreground transition-smooth hover:bg-muted/50"
           >
             {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
@@ -31,7 +31,7 @@ export function SiteHeader() {
 
         <Link
           href="/"
-          className="font-heading text-2xl tracking-tight md:text-[1.65rem]"
+          className="font-heading text-2xl tracking-tight md:text-[1.65rem] text-foreground transition-smooth hover:text-accent"
           onClick={() => setMenuOpen(false)}
         >
           Maru
@@ -42,7 +42,7 @@ export function SiteHeader() {
             <Link
               key={link.label}
               href={link.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="text-sm text-muted-foreground transition-smooth hover:text-foreground relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-accent after:transition-all after:duration-300 hover:after:w-full"
             >
               {link.label}
             </Link>
@@ -51,13 +51,13 @@ export function SiteHeader() {
 
         <button
           onClick={() => setOpen(true)}
-          className="relative flex items-center gap-2 rounded-full px-2 py-1.5 text-sm text-foreground transition-colors hover:text-primary"
+          className="relative flex items-center gap-2 rounded-full px-3 py-2 text-sm text-foreground transition-smooth hover:bg-muted/50 active:scale-95"
           aria-label={`Open bag, ${count} items`}
         >
           <ShoppingBag className="size-5" />
           <span className="hidden sm:inline">Bag</span>
           {count > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-accent px-1 text-[0.65rem] font-medium text-accent-foreground">
+            <span className="absolute -right-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-accent px-1 text-[0.65rem] font-medium text-accent-foreground shadow-premium-sm animate-glow-pulse">
               {count}
             </span>
           )}
@@ -66,14 +66,14 @@ export function SiteHeader() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <nav className="border-t border-border bg-background px-5 py-4 md:hidden">
+        <nav className="border-t border-border/40 bg-background/95 backdrop-blur-md px-5 py-4 md:hidden animate-fade-in">
           <ul className="flex flex-col gap-1">
-            {links.map((link) => (
-              <li key={link.label}>
+            {links.map((link, i) => (
+              <li key={link.label} style={{ animationDelay: `${i * 0.05}s` }} className="animate-fade-in-up">
                 <Link
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="block rounded-md px-2 py-2.5 text-sm text-foreground transition-colors hover:bg-muted"
+                  className="block rounded-lg px-3 py-2.5 text-sm text-foreground transition-smooth hover:bg-muted/50"
                 >
                   {link.label}
                 </Link>

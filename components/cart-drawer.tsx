@@ -29,7 +29,7 @@ export function CartDrawer() {
       aria-hidden={!isOpen}
     >
       <div
-        className={`absolute inset-0 bg-foreground/30 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`absolute inset-0 bg-foreground/40 backdrop-blur-md transition-opacity duration-300 ${
           isOpen ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={() => setOpen(false)}
@@ -38,19 +38,19 @@ export function CartDrawer() {
         role="dialog"
         aria-modal="true"
         aria-label="Shopping bag"
-        className={`absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-card shadow-2xl transition-transform duration-300 ease-out ${
+        className={`absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-card shadow-premium-xl transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <header className="flex items-center justify-between border-b border-border px-6 py-5">
-          <h2 className="flex items-center gap-2 font-heading text-lg">
-            <ShoppingBag className="size-5" aria-hidden="true" />
+        <header className="flex items-center justify-between border-b border-border/50 px-6 py-5">
+          <h2 className="flex items-center gap-2 font-heading text-lg text-foreground">
+            <ShoppingBag className="size-5 text-accent" aria-hidden="true" />
             Your bag
             <span className="text-muted-foreground">({count})</span>
           </h2>
           <button
             onClick={() => setOpen(false)}
-            className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="rounded-full p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
             aria-label="Close bag"
           >
             <X className="size-5" />
@@ -93,15 +93,15 @@ export function CartDrawer() {
                     <div className="mt-auto flex items-center gap-2 pt-3">
                       <button
                         onClick={() => setQuantity(product.id, quantity - 1)}
-                        className="flex size-7 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:text-foreground"
+                        className="flex size-7 items-center justify-center rounded-full border border-border text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
                         aria-label={`Decrease quantity of ${product.name}`}
                       >
                         <Minus className="size-3.5" />
                       </button>
-                      <span className="w-6 text-center text-sm tabular-nums">{quantity}</span>
+                      <span className="w-6 text-center text-sm tabular-nums font-medium">{quantity}</span>
                       <button
                         onClick={() => setQuantity(product.id, quantity + 1)}
-                        className="flex size-7 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:text-foreground"
+                        className="flex size-7 items-center justify-center rounded-full border border-border text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
                         aria-label={`Increase quantity of ${product.name}`}
                       >
                         <Plus className="size-3.5" />
@@ -112,15 +112,15 @@ export function CartDrawer() {
               ))}
             </ul>
 
-            <footer className="border-t border-border px-6 py-5">
-              <div className="flex items-center justify-between pb-1">
+            <footer className="border-t border-border/50 px-6 py-5 space-y-3">
+              <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span className="font-heading text-xl">{formatPrice(subtotal)}</span>
+                <span className="font-heading text-xl text-foreground">{formatPrice(subtotal)}</span>
               </div>
-              <p className="pb-4 text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 Shipping and taxes calculated at checkout.
               </p>
-              <button className="w-full rounded-full bg-primary py-3.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+              <button className="w-full rounded-full bg-primary py-3.5 text-sm font-medium text-primary-foreground transition-smooth shadow-premium hover:shadow-premium-lg hover:bg-primary/90 active:scale-95">
                 Proceed to checkout
               </button>
             </footer>
